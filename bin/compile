@@ -69,17 +69,6 @@ sed -i -e"s|^.*collector_log_file:.*$|collector_log_file: $DD_LOG_DIR/collector.
 sed -i -e"s|^.*forwarder_log_file:.*$|forwarder_log_file: $DD_LOG_DIR/forwarder.log|" $DD_AGENT_CONF
 sed -i -e"s|^.*dogstatsd_log_file:.*$|dogstatsd_log_file: $DD_LOG_DIR/dogstatsd.log|" $DD_AGENT_CONF
 
-# set up pgbouncer integration
-cat >> $DD_AGENT_INTEGRATIONS/pgbouncer.yaml << EOFEOF
-init_config:
-
-instances:
-  - database_url: ${PGBOUNCER_STATS_DATABASE_URL}
-  tags:
-    - app_name: ${HEROKU_APP_NAME}
-
-EOFEOF
-
 # Drop off the runner
 mkdir -p $BUILD_DIR/.profile.d
 cp $BUILDPACK_DIR/extra/run-dogstatsd.sh $BUILD_DIR/.profile.d/

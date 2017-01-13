@@ -19,6 +19,17 @@ else
   exit 1
 fi
 
+# set up pgbouncer integration
+cat >> /app/.apt/opt/datadog-agent/agent/conf.d/pgbouncer.yaml << EOFEOF
+init_config:
+
+instances:
+  - database_url: ${PGBOUNCER_STATS_DATABASE_URL}
+  tags:
+    - app_name: ${HEROKU_APP_NAME}
+
+EOFEOF
+
 (
   # Load our library path first when starting up
   export LD_LIBRARY_PATH=/app/.apt/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH
