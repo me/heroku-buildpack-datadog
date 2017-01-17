@@ -25,6 +25,8 @@ cat >> /app/.apt/opt/datadog-agent/agent/conf.d/pgbouncer.yaml << EOFEOF
 init_config:
 instances:
   - database_url:  postgres://${PGBOUNCER_STATS_USER}:${PGBOUNCER_STATS_PASSWORD}@127.0.0.1:6000/pgbouncer
+    tags:
+      - source:${DYNO}
 EOFEOF
 
 # Update integration directory configuration
