@@ -74,5 +74,7 @@ echo 'log_level: DEBUG' >> $DD_AGENT_CONF
 # Drop off the runner
 mkdir -p $BUILD_DIR/.profile.d
 cp $BUILDPACK_DIR/extra/run-dogstatsd.sh $BUILD_DIR/.profile.d/
+cp $BUILDPACK_DIR/extra/run-agent.sh $BUILD_DIR/.profile.d/
 chmod +x $BUILD_DIR/.profile.d/run-dogstatsd.sh
+chmod +x $BUILD_DIR/.profile.d/run-agent.sh
 topic "Datadog Agent package installed"
