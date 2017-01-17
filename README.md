@@ -36,6 +36,12 @@ Once started, provides a listening port on 8125 for statsd/dotstatsd metrics and
 
 An example using Ruby is [here](https://github.com/miketheman/buildpack-example-ruby).
 
+## Extra configuration
+
+- If `$DATADOG_USE_DYNO_NAME` is set, reporting to datadog will include the dyno
+  name instead of just the application name.
+
+
 ## Todo
 
 Things that have not been tested, tried, figured out.
