@@ -69,8 +69,6 @@ sed -i -e"s|^.*collector_log_file:.*$|collector_log_file: $DD_LOG_DIR/collector.
 sed -i -e"s|^.*forwarder_log_file:.*$|forwarder_log_file: $DD_LOG_DIR/forwarder.log|" $DD_AGENT_CONF
 sed -i -e"s|^.*dogstatsd_log_file:.*$|dogstatsd_log_file: $DD_LOG_DIR/dogstatsd.log|" $DD_AGENT_CONF
 
-# comment out this line to set the log level
-# echo 'log_level: DEBUG' >> $DD_AGENT_CONF
 # Drop off the runner
 
 mkdir -p $BUILD_DIR/.profile.d
