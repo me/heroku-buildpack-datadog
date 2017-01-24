@@ -9,6 +9,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
+DATADOG_AGENT_VERSION="1:5.9.1-1"
 
 # Load some convenience functions like topic(), echo(), and indent()
 source $BUILDPACK_DIR/bin/common.sh
@@ -51,7 +52,7 @@ topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
 topic "Fetching datadog-agent"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends datadog-agent | indent
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends datadog-agent=$DATADOG_AGENT_VERSION | indent
 
 topic "Fetching deb packages"
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
