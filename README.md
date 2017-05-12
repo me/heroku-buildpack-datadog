@@ -23,7 +23,7 @@ cd <root of my project>
 
 heroku create # only if this is a new heroku project
 
-heroku buildpacks:add heroku/ruby # or other language-specific build page needed
+heroku buildpacks:add heroku/ruby # or other language-specific build page needed if not already there
 heroku buildpacks:add --index 1 https://github.com/deliveroo/heroku-buildpack-datadog.git
 
 heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
