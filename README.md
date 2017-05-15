@@ -3,24 +3,29 @@ heroku-buildpack-datadog
 
 A [Heroku Buildpack] to add [Datadog] [DogStatsD] relay to any Dyno.
 
+## Warning: Version pinned to datadog-agent 1:5.11.2-1
+
+[datadog-agent 5.12.0 broke compatibility with this buildpack
+by hard-deprecating `dogstatsd.py start`](https://github.com/DataDog/dd-agent/pull/3004)
+
+When the incompatibility is resolved [#30](https://github.com/miketheman/heroku-buildpack-datadog/pull/30) can be reverted.
+
 ## Usage
 
 This buildpack is typically used in conjunction with other languages, so is
-most useful with the [heroku-buildpack-multi] buildpack, and language-specific
-buildpacks - see [Heroku Language Buildpacks] for more.
-
+most useful with language-specific buildpacks - see [Heroku Language Buildpacks] for more.
 
 Here are some setup commands to add this buildpack to your project, as well as
 setting the required environment variables:
 
 ```shell
 cd <root of my project>
-# Prepend the .buildpacks file with the URL
-touch .buildpacks ; echo "https://github.com/miketheman/heroku-buildpack-datadog.git" | cat - .buildpacks > /tmp/out && mv /tmp/out .buildpacks
-git commit -i .buildpacks -m "Add Heroku Buildpack Datadog"
 
 heroku create # only if this is a new heroku project
-heroku config:add BUILDPACK_URL=https://github.com/deliveroo/heroku-buildpack-multi.git
+
+heroku buildpacks:add heroku/ruby # or other language-specific build page needed if not already there
+heroku buildpacks:add --index 1 https://github.com/deliveroo/heroku-buildpack-datadog.git
+
 heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
 heroku config:add DATADOG_API_KEY=<your API key>
 
@@ -30,9 +35,21 @@ git push heroku master
 You can create/retrieve the `DATADOG_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
 API Key, not application key.
 
+You can optionally set additional percentiles for your histogram metrics. By default
+only 95th percentile will be generated. To generate additional percentiles, set *all*
+persentiles, including default one, using env variable `DATADOG_HISTOGRAM_PERCENTILES`.
+For example, if you want to generate 0.95 and 0.99 percentiles, you may use following
+command:
+
+```shell
+heroku config:add DATADOG_HISTOGRAM_PERCENTILES="0.95, 0.99"
+```
+
+Documentaion about additional percentiles [here](https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog).
+
 Once complete, the Agent's dogstatsd binary will be started automatically with the Dyno startup.
 
-Once started, provides a listening port on 8125 for statsd/dotstatsd metrics and events.
+Once started, provides a listening port on 8125 for statsd/dogstatsd metrics and events.
 
 An example using Ruby is [here](https://github.com/miketheman/buildpack-example-ruby).
 
@@ -50,7 +67,7 @@ Things that have not been tested, tried, figured out.
 - determine how the compiled cache behaves with new releases of the
   datadog-agent package, as it stored the deb file
 - tag release when stable, update docs on how to use a given release in
-  q.buildpacks
+  `.buildpacks`, like "https://github.com/miketheman/heroku-buildpack-datadog.git#v1.0.0"
 
 ## Contributing
 
@@ -76,7 +93,6 @@ MIT License, see `LICENSE` file for full text.
 [Datadog]: http://www.datadog.com
 [DogStatsD]: http://docs.datadoghq.com/guides/dogstatsd/
 [Heroku Buildpack]: https://devcenter.heroku.com/articles/buildpacks
-[heroku-buildpack-multi]: https://github.com/ddollar/heroku-buildpack-multi
 [Heroku Language Buildpacks]: https://devcenter.heroku.com/articles/buildpacks#default-buildpacks
 
 [@ddollar]: https://github.com/ddollar
